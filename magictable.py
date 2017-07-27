@@ -58,6 +58,7 @@ def magic():
     result = ""
     for bit in answer[::-1]:
         result += bit
-    print(b2d(result))
+    result = b2d(result)
+    print("Your number was " + str(result))
 
 
