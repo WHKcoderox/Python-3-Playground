@@ -2,13 +2,14 @@
 def d2b(n):
     NEWBASE = 2
     ans = []
-    ans2 = ''
+    i = 0 # return all digit positions
     while n >= 1:
-        ans.append(n % NEWBASE)
+        next_digit = n % NEWBASE
+        if next_digit == 1:
+            ans.append(i)
         n //= NEWBASE
-    for digit in ans[::-1]:
-        ans2 += str(digit)
-    return ans2
+        i += 1
+    return ans
 
 def b2d(n):
     OLDBASE = 2
@@ -27,16 +28,15 @@ def magic():
     # make the tables
     tables = [ [] for i in range(math.ceil(math.log(HIGH,2))) ]
     for decimal in range(LOW, HIGH+1):
-        # convert to binary
+        # get binary digit positions
         binary = d2b(decimal)
-        for i in range(len(binary)):
-            if binary[0-(i+1)] == '1':
-                tables[i].append(decimal)
+        for i in binary:
+            tables[i].append(decimal)
 
     # setup done, now make queries
     CELLMAX = len(str(HIGH)) + 2
-    CHARMAX = 25
-    ROWMAX = 25//CELLMAX
+    CHARMAX = 25 # maximum characters in one row
+    ROWMAX = CHARMAX//CELLMAX
     NEWLINE = "\n" + ("-"*CELLMAX)*ROWMAX + "\n"
     answer = ["0" for i in range(math.ceil(math.log(HIGH,2)))]
     for i in range(len(tables)):
@@ -52,9 +52,15 @@ def magic():
             # standard sized table cell
             req_string += "|" + " "*((CELLMAX-2-length)//2) + str(elem) + " "*(math.ceil((CELLMAX-2-length)/2)) + "|"
             counter += 1
-        user = input(req_string + "\n").upper()
-        if user == "Y":
-            answer[i] = "1"
+        valid = False
+        while not valid:
+            user = input(req_string + "\n").upper()
+            if user == "Y":
+                answer[i] = "1"
+                break
+            if user == "N":
+                break
+            print("Take it seriously. Y/N only.")
     result = ""
     for bit in answer[::-1]:
         result += bit
